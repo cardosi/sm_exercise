@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Pizza API
+  description: An API for managing pizzas and toppings
+  version: 1.0
+paths:
+  /:
+    get:
+      summary: Welcome to the Pizza API
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                message: Welcome to the Pizza API
+                routes:
+                  get_pizzas: /pizzas
+                  create_pizza: /pizzas
+                  get_pizza: /pizzas/{id}
+                  update_pizza: /pizzas/{id}
+                  delete_pizza: /pizzas/{id}
+                  get_toppings: /toppings
+                  create_topping: /toppings
+                  get_topping: /toppings/{id}
+                  update_topping: /toppings/{id}
+                  delete_topping: /toppings/{id}
+                  create_pizza_topping: /pizza_toppings
+                  get_pizza_topping: /pizza_toppings/{id}
+  /pizzas:
+    get:
+      summary: Get all pizzas
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: []
+    post:
+      summary: Create a pizza
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+  /pizzas/{id}:
+    get:
+      summary: Get a pizza by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+        '404':
+          description: Pizza not found
+    patch:
+      summary: Update a pizza by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+    delete:
+      summary: Delete a pizza by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /toppings:
+    get:
+      summary: Get all toppings
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: []
+    post:
+      summary: Create a topping
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+  /toppings/{id}:
+    get:
+      summary: Get a topping by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+        '404':
+          description: Topping not found
+    patch:
+      summary: Update a topping by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+    delete:
+      summary: Delete a topping by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /pizza_toppings:
+    get:
+      summary: Get all pizza toppings
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: []
+    post:
+      summary: Create a pizza topping
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+  /pizza_toppings/{id}:
+    get:
+      summary: Get a pizza topping by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
+        '404':
+          description: Pizza topping not found
+    delete:
+      summary: Delete a pizza topping by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /pizzas/{pizza_id}/toppings:
+    get:
+      summary: Get toppings for a pizza
+      parameters:
+        - name: pizza_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {}
