@@ -3,12 +3,12 @@ import { FC, ChangeEvent } from 'react';
 
 interface UserTabsProps {
   value: number;
-  handleChange: (event: ChangeEvent<object>, newValue: number) => void;
+  handleChange: (_: ChangeEvent<object>, newValue: number) => void;
 }
 
 export const UserTabs: FC<UserTabsProps> = ({ value, handleChange }) => {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
+    <Box sx={{ borderColor: 'divider', width: '100%' }}>
       <Tabs
         value={value}
         onChange={handleChange}

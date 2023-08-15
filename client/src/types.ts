@@ -15,6 +15,7 @@ export interface PizzaTopping {
 }
 
 export type ItemType = 'pizzas' | 'toppings' | 'pizza_toppings';
+
 export type ItemTypeToData = {
   pizzas: Pizza[],
   toppings: Topping[],

@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useFetchAll } from '../hooks/useFetchAll';
 import { useManageItem } from '../hooks/useManageItem';
-import { Box, Chip, FormControlLabel, Grid, Stack, Typography } from '@mui/material';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import { CreateInput } from './createInput';
 import { MUIAlert } from './alert';
-import { MuiChip } from './chip';
-import { PizzaToppingSwitch } from './pizzaToppingSwitch';
 import { EditableTitle } from './editableTitle';
+import { PizzaList } from './pizzaList';
+import { ToppingList } from './toppingList';
+import { formattedName, itemExists } from '../utils';
 
 export const Chefs = () => {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [selectedPizza, setSelectedPizza] = useState<{ id: number | null, name: string }>({ id: null, name: "" });
   const [addPizzaName, setAddPizzaName] = useState<string>("");
-  const [alertOpen, setAlertOpen] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alert, setAlert] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
 
   const { data: pizzasData, isLoading: isLoadingPizzas, fetchAll: fetchPizzas } = useFetchAll('pizzas');
   const { data: toppingsData, isLoading: isLoadingToppings, fetchAll: fetchToppings } = useFetchAll('toppings');
@@ -26,7 +26,11 @@ export const Chefs = () => {
     updateItem: updatePizza
   } = useManageItem('pizzas');
 
-  const { createItem: createPizzaTopping, deleteItem: deletePizzaTopping, isLoading: isLoadingManagePizzaToppings } = useManageItem('pizza_toppings');
+  const {
+    createItem: createPizzaTopping,
+    deleteItem: deletePizzaTopping,
+    isLoading: isLoadingManagePizzaToppings
+  } = useManageItem('pizza_toppings');
 
 
   useEffect(() => {
@@ -44,16 +48,9 @@ export const Chefs = () => {
     fetchPizzaToppings();
   }, [isLoadingManagePizzaToppings]);
 
-  const capitalize = (s: string): string => {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
   const handleCreatePizza = (newPizzaName: string) => {
-    const formattedNewPizzaName = newPizzaName.toLowerCase().trim();
-
-    if (pizzasData.some(pizza => pizza.name.toLowerCase().trim() === formattedNewPizzaName)) {
-      setAlertMessage(`Pizza ${newPizzaName} already exists!`);
-      setAlertOpen(true);
+    if (itemExists(pizzasData, newPizzaName)) {
+      setAlert({ open: true, message: `Pizza ${newPizzaName} already exists!` })
       setAddPizzaName("");
       return;
     }
@@ -66,9 +63,8 @@ export const Chefs = () => {
     if (id === null) {
       return;
     }
-    if (pizzasData.some(pizza => pizza.name.toLowerCase().trim() === updatedName.toLowerCase().trim())) {
-      setAlertMessage(`Pizza ${updatedName} already exists!`);
-      setAlertOpen(true);
+    if (itemExists(pizzasData, updatedName)) {
+      setAlert({ open: true, message: `Pizza ${updatedName} already exists!` })
       setSelectedPizza({ id: null, name: "" });
       return;
     }
@@ -81,7 +77,7 @@ export const Chefs = () => {
       setSelectedPizza({ id: null, name: "" });
     }
     else {
-      setSelectedPizza({ id, name: capitalize(name) });
+      setSelectedPizza({ id, name: formattedName(name) });
     }
   }
 
@@ -97,7 +93,7 @@ export const Chefs = () => {
 
   return (
     <>
-      <MUIAlert message={alertMessage} open={alertOpen} setOpen={setAlertOpen} />
+      <MUIAlert alert={alert} setAlert={() => setAlert} />
       <Box sx={{ display: 'flex', flexDirection: 'row', maxHeight: '80vh' }}>
         <Box sx={{ flex: "1 0 22%", px: 2, borderRight: '1px solid grey', maxHeight: '80vh', overflow: 'hidden' }}>
           <Typography variant="h4" gutterBottom component="span">
@@ -117,15 +113,12 @@ export const Chefs = () => {
                   handleChange={(e) => setAddPizzaName(e.target.value)}
                   handleClick={() => handleCreatePizza(addPizzaName)}
                 />
-                {pizzasData.map((pizza) => (
-                  <MuiChip
-                    key={pizza.id}
-                    item={pizza}
-                    selectedID={selectedPizza.id}
-                    handleClick={() => handleSelectPizza(pizza.id, pizza.name)}
-                    handleDelete={() => handleDeletePizza(pizza.id)}
-                  />
-                ))}
+                <PizzaList
+                  pizzasData={pizzasData}
+                  selectedPizza={selectedPizza}
+                  handleSelectPizza={handleSelectPizza}
+                  handleDeletePizza={handleDeletePizza}
+                />
               </>
             )}
           </Stack>
@@ -141,24 +134,13 @@ export const Chefs = () => {
             sx={{ pt: 2, maxHeight: '80vh', overflow: 'scroll' }}
           >
             {isLoadingToppings && firstLoad ? <div>Loading...</div> : (
-              <>
-                {toppingsData.map((topping) => (
-                  <FormControlLabel
-                    key={topping.id}
-                    label={topping.name}
-                    labelPlacement="start"
-                    control={
-                      <PizzaToppingSwitch
-                        pizzaToppingData={pizzaToppingData}
-                        selectedPizzaId={selectedPizza.id}
-                        toppingId={topping.id}
-                        addPizzaTopping={createPizzaTopping}
-                        removePizzaTopping={deletePizzaTopping}
-                      />
-                    }
-                  />
-                ))}
-              </>
+              <ToppingList
+                toppingsData={toppingsData}
+                pizzaToppingData={pizzaToppingData}
+                selectedPizza={selectedPizza}
+                deletePizzaTopping={deletePizzaTopping}
+                createPizzaTopping={createPizzaTopping}
+              />
             )}
           </Stack>
         </Box>
@@ -176,6 +158,7 @@ export const Chefs = () => {
               pizzaTopping.pizza_id === selectedPizza.id && (
                 <Grid item key={pizzaTopping.id}>
                   <Chip
+                    data-testid={`pizza-topping-chip-${pizzaTopping.id}`}
                     label={(toppingsData).find(topping => topping.id === pizzaTopping.topping_id)?.name}
                     key={pizzaTopping.id}
                   />

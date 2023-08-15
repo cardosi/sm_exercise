@@ -6,13 +6,14 @@ import { EditInput } from './editInput';
 import { Box, Typography } from '@mui/material';
 import { CreateInput } from './createInput';
 import { MUIAlert } from './alert';
+import { formattedName, itemExists } from '../utils';
 
 export const Owners = () => {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [selectedTopping, setSelectedTopping] = useState<{ id: number | null, name: string }>({ id: null, name: "" });
   const [addToppingName, setAddToppingName] = useState<string>("");
-  const [alertOpen, setAlertOpen] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alert, setAlert] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+
 
   const { data: toppingsData, isLoading, fetchAll: fetchToppings } = useFetchAll('toppings');
   const {
@@ -34,31 +35,20 @@ export const Owners = () => {
     fetchPizzaToppings();
   }, []);
 
-  const capitalize = (s: string): string => {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
   const handleCreateTopping = (newToppingName: string) => {
-    const formattedNewToppingName = newToppingName.toLowerCase().trim();
-
-    if (toppingsData.some(topping => topping.name.toLowerCase().trim() === formattedNewToppingName)) {
-      setAlertMessage(`Topping ${newToppingName} already exists!`);
-      setAlertOpen(true);
+    if (itemExists(toppingsData, newToppingName)) {
+      setAlert({ open: true, message: `Topping ${newToppingName} already exists!` })
       setAddToppingName("");
       return;
     }
-
-    createTopping({ name: newToppingName });
+    createTopping({ name: formattedName(newToppingName) });
     setAddToppingName("");
   }
 
   const handleUpdateTopping = (id: number | null, updatedName: string) => {
-    if (id === null) {
-      return;
-    }
-    if (toppingsData.some(topping => topping.name.toLowerCase().trim() === updatedName.toLowerCase().trim())) {
-      setAlertMessage(`Topping ${updatedName} already exists!`);
-      setAlertOpen(true);
+    if (id === null) return;
+    if (itemExists(toppingsData, updatedName)) {
+      setAlert({ open: true, message: `Topping ${formattedName(updatedName)} already exists!` })
       setSelectedTopping({ id: null, name: "" });
       return;
     }
@@ -71,7 +61,7 @@ export const Owners = () => {
       setSelectedTopping({ id: null, name: "" });
     }
     else {
-      setSelectedTopping({ id, name: capitalize(name) });
+      setSelectedTopping({ id, name: formattedName(name) });
     }
   }
 
@@ -85,7 +75,7 @@ export const Owners = () => {
 
   return (
     <>
-      <MUIAlert message={alertMessage} open={alertOpen} setOpen={setAlertOpen} />
+      <MUIAlert alert={alert} setAlert={() => setAlert} />
       <Typography variant="h4" gutterBottom component="span">
         Available Toppings
       </Typography>

@@ -8,31 +8,30 @@ function SlideTransition(props: SlideProps) {
 }
 
 interface MUIAlertProps {
-  message: string;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  alert: { open: boolean; message: string; };
+  setAlert: (open: boolean, message: string) => void;
 }
 
-export const MUIAlert: FC<MUIAlertProps> = ({ message, open, setOpen }) => {
+export const MUIAlert: FC<MUIAlertProps> = ({ alert, setAlert }) => {
   const handleClose = (_?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    setOpen(false);
+    setAlert(false, '');
   };
 
   return (
     <div>
       <Snackbar
-        open={open}
+        open={alert.open}
         onClose={handleClose}
         TransitionComponent={SlideTransition}
         autoHideDuration={6000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="error" onClose={handleClose} sx={{ width: '100%' }}>
-          {message}
+          {alert.message}
         </Alert>
       </Snackbar>
     </div>

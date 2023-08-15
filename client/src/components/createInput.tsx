@@ -18,6 +18,7 @@ export const CreateInput: FC<CreateInputProps> = ({ label, value, placeholder, h
         color="success"
         onClick={handleClick}
         disabled={value === ''}
+        data-testid="add-button"
       >
         <AddIcon />
       </IconButton>
@@ -32,6 +33,7 @@ export const CreateInput: FC<CreateInputProps> = ({ label, value, placeholder, h
       placeholder={placeholder}
       onChange={handleChange}
       InputProps={{ endAdornment: <CreateButton /> }}
+      data-testid="create-input"
     />
   );
 }

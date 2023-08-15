@@ -1,5 +1,6 @@
 import sys
 import boto3
+import random
 
 dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
 
@@ -60,16 +61,42 @@ def truncate_tables():
 
 
 def seed_tables():
-    tables = ['Pizzas', 'Toppings', 'PizzaToppings']
-    for table_name in tables:
-        if table_exists(table_name):
-            table = dynamodb.Table(table_name)
-            table.put_item(
+    pizza_names = ['Margherita', 'Pepperoni',
+                   'BBQ Chicken', 'Hawaiian', 'Veggie', 'Buffalo']
+    topping_names = ['Mushrooms', 'Pepperoni',
+                     'Onions', 'Sausage', 'Bacon', 'Extra cheese']
+
+    pizza_table = dynamodb.Table('Pizzas')
+    for i, pizza_name in enumerate(pizza_names, start=1):
+        pizza_table.put_item(
+            Item={
+                'id': i,
+                'name': pizza_name
+            }
+        )
+
+    topping_table = dynamodb.Table('Toppings')
+    for i, topping_name in enumerate(topping_names, start=1):
+        topping_table.put_item(
+            Item={
+                'id': i,
+                'name': topping_name
+            }
+        )
+
+    pizza_toppings_table = dynamodb.Table('PizzaToppings')
+    pizza_toppings_id = 1
+    for i in range(1, 7):
+        toppings_for_pizza = random.sample(range(1, 7), random.randint(1, 6))
+        for j in toppings_for_pizza:
+            pizza_toppings_table.put_item(
                 Item={
-                    'id': 1,
-                    'name': 'Sample data'
+                    'id': pizza_toppings_id,
+                    'pizza_id': i,
+                    'topping_id': j
                 }
             )
+            pizza_toppings_id += 1
 
 
 def build():

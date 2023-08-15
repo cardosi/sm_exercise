@@ -27,6 +27,7 @@ export const EditableTitle: FC<EditableTitleProps> = ({ label, value, helperText
         color="primary"
         onClick={() => setEditMode(true)}
         disabled={disabled}
+        data-testid="edit-button"
       >
         <EditIcon />
       </IconButton>
@@ -39,10 +40,11 @@ export const EditableTitle: FC<EditableTitleProps> = ({ label, value, helperText
         aria-label="submit"
         color="primary"
         onClick={() => {
-          handleClick
+          handleClick()
           setEditMode(false)
         }}
         disabled={value === ''}
+        data-testid="submit-button"
       >
         <CheckIcon />
       </IconButton>
@@ -59,9 +61,10 @@ export const EditableTitle: FC<EditableTitleProps> = ({ label, value, helperText
           onChange={handleChange}
           disabled={disabled}
           InputProps={{ endAdornment: <CheckButton /> }}
+          data-testid="text-field"
         />
       ) : (
-        <Typography variant="h4" gutterBottom component="span">
+        <Typography variant="h4" gutterBottom component="span" data-testId="editable-title-static-text">
           {helperText} {<EditButton />}
         </Typography>
       )}

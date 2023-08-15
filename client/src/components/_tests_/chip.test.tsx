@@ -20,7 +20,7 @@ describe('MuiChip', () => {
     const handleDelete = vi.fn()
     const item = { id: 1, name: 'TestChip' }
     const { getByTestId } = render(<MuiChip item={item} selectedID={null} handleClick={() => { }} handleDelete={handleDelete} />)
-    fireEvent.click(getByTestId("CancelIcon")) // replace 'delete' with the actual delete button text
+    fireEvent.click(getByTestId("CancelIcon"))
     expect(handleDelete).toHaveBeenCalled()
   })
 

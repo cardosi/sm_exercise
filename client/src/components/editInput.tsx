@@ -19,6 +19,7 @@ export const EditInput: FC<EditInputProps> = ({ label, value, helperText, disabl
         color="primary"
         onClick={handleClick}
         disabled={disabled || value === ''}
+        data-testid="edit-button"
       >
         <EditIcon />
       </IconButton>

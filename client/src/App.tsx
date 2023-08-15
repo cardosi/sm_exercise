@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { Owners } from './components/owners'
 import { UserTabs } from './components/userTabs'
 import { ChangeEvent, useState } from 'react';
@@ -13,7 +13,7 @@ function App() {
   };
 
   return (
-    <Paper sx={{ height: '100vh', px: 10, pt: 4 }}>
+    <Container sx={{ height: '100vh', px: 10, pt: 4 }}>
       <Typography variant="h2" gutterBottom component="span">
         SM Slices
       </Typography>
@@ -24,7 +24,7 @@ function App() {
       <TabPanel value={value} index={1}>
         <Chefs />
       </TabPanel>
-    </Paper>
+    </Container>
   )
 }
 
