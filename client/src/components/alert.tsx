@@ -9,7 +9,7 @@ function SlideTransition(props: SlideProps) {
 
 interface MUIAlertProps {
   alert: { open: boolean; message: string; };
-  setAlert: (open: boolean, message: string) => void;
+  setAlert: (alert: { open: boolean, message: string }) => void;
 }
 
 export const MUIAlert: FC<MUIAlertProps> = ({ alert, setAlert }) => {
@@ -18,7 +18,7 @@ export const MUIAlert: FC<MUIAlertProps> = ({ alert, setAlert }) => {
       return;
     }
 
-    setAlert(false, '');
+    setAlert({ open: false, message: alert.message });
   };
 
   return (

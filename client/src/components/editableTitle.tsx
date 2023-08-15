@@ -64,7 +64,7 @@ export const EditableTitle: FC<EditableTitleProps> = ({ label, value, helperText
           data-testid="text-field"
         />
       ) : (
-        <Typography variant="h4" gutterBottom component="span" data-testId="editable-title-static-text">
+        <Typography variant="h4" gutterBottom component="span" data-testid="editable-title-static-text">
           {helperText} {<EditButton />}
         </Typography>
       )}

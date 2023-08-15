@@ -16,6 +16,6 @@ describe('MUIAlert', () => {
     const setAlert = vi.fn()
     render(<MUIAlert alert={{ open: true, message: 'Test message' }} setAlert={setAlert} />)
     fireEvent.click(screen.getByRole('button'))
-    expect(setAlert).toHaveBeenCalledWith(false, '')
+    expect(setAlert).toHaveBeenCalledWith({ open: false, message: 'Test message' })
   })
 })

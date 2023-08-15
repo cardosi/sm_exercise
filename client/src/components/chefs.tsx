@@ -93,8 +93,8 @@ export const Chefs = () => {
 
   return (
     <>
-      <MUIAlert alert={alert} setAlert={() => setAlert} />
-      <Box sx={{ display: 'flex', flexDirection: 'row', maxHeight: '80vh' }}>
+      <MUIAlert alert={alert} setAlert={setAlert} />
+      <Box sx={{ display: 'flex', flexDirection: 'row', height: '80vh' }}>
         <Box sx={{ flex: "1 0 22%", px: 2, borderRight: '1px solid grey', maxHeight: '80vh', overflow: 'hidden' }}>
           <Typography variant="h4" gutterBottom component="span">
             Pizzas

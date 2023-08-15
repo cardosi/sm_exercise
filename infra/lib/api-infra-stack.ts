@@ -29,17 +29,17 @@ export class APIInfraStack extends cdk.Stack {
 
     const toppingsTable = new Table(this, `Toppings-Table-${id}`, {
       tableName: 'Toppings',
-      partitionKey: { name: 'id', type: AttributeType.STRING },
+      partitionKey: { name: 'id', type: AttributeType.NUMBER },
     });
 
     const pizzasTable = new Table(this, `Pizzas-Table-${id}`, {
       tableName: 'Pizzas',
-      partitionKey: { name: 'id', type: AttributeType.STRING },
+      partitionKey: { name: 'id', type: AttributeType.NUMBER },
     });
 
     const pizzaToppingsTable = new Table(this, `Pizza-Toppings-Table-${id}`, {
       tableName: 'PizzaToppings',
-      partitionKey: { name: 'id', type: AttributeType.STRING },
+      partitionKey: { name: 'id', type: AttributeType.NUMBER },
     });
 
     toppingsTable.grantReadWriteData(pyFunc)
@@ -47,8 +47,42 @@ export class APIInfraStack extends cdk.Stack {
     pizzaToppingsTable.grantReadWriteData(pyFunc)
 
     api.root.addMethod('ANY', integration)
-    const testResource = api.root.addResource('test')
-    testResource.addMethod('GET', integration)
-    testResource.addMethod('POST', integration)
+
+    // '/pizzas'
+    const pizzasResource = api.root.addResource('pizzas')
+    pizzasResource.addMethod('OPTIONS', integration)
+    pizzasResource.addMethod('GET', integration)
+    pizzasResource.addMethod('POST', integration)
+
+    // '/pizzas/{id}'
+    const pizzaResource = pizzasResource.addResource('{id}')
+    pizzaResource.addMethod('OPTIONS', integration)
+    pizzaResource.addMethod('GET', integration)
+    pizzaResource.addMethod('PUT', integration)
+    pizzaResource.addMethod('DELETE', integration)
+
+    // '/toppings'
+    const toppingsResource = api.root.addResource('toppings')
+    toppingsResource.addMethod('OPTIONS', integration)
+    toppingsResource.addMethod('GET', integration)
+    toppingsResource.addMethod('POST', integration)
+    
+    // '/toppings/{id}'
+    const toppingResource = toppingsResource.addResource('{id}')
+    toppingResource.addMethod('OPTIONS', integration)
+    toppingResource.addMethod('GET', integration)
+    toppingResource.addMethod('PUT', integration)
+    toppingResource.addMethod('DELETE', integration)
+    
+    // '/pizza_toppings'
+    const pizzaToppingsResource = api.root.addResource('pizza_toppings')
+    pizzaToppingsResource.addMethod('OPTIONS', integration)
+    pizzaToppingsResource.addMethod('GET', integration)
+    pizzaToppingsResource.addMethod('POST', integration)
+
+    // '/pizza_toppings/{id}'
+    const pizzaToppingResource = pizzaToppingsResource.addResource('{id}')
+    pizzaToppingResource.addMethod('OPTIONS', integration)
+    pizzaToppingResource.addMethod('DELETE', integration)
   }
 }

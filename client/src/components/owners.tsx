@@ -75,7 +75,7 @@ export const Owners = () => {
 
   return (
     <>
-      <MUIAlert alert={alert} setAlert={() => setAlert} />
+      <MUIAlert alert={alert} setAlert={setAlert} />
       <Typography variant="h4" gutterBottom component="span">
         Available Toppings
       </Typography>
