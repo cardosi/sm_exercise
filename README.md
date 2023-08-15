@@ -42,7 +42,7 @@ API endpoints are available at http://localhost:5000/
 
 ## Run Frontend Tests
 
-### Add .env.local
+### Add .env.test.local
 Create a file named `.env.test.local` in the client directory and add the following environment variables:
 
 ```
