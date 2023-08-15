@@ -271,21 +271,5 @@ def manage_pizza_topping(id):
             return str(e), 500
 
 
-@app.route('/pizzas/<int:pizza_id>/toppings', methods=['GET'])
-def get_pizza_toppings(pizza_id):
-    ddb_pizza_toppings = DynamoDBClient('PizzaToppings')
-    ddb_toppings = DynamoDBClient('Toppings')
-    try:
-        pizza_toppings = ddb_pizza_toppings.query_table('pizza_id', pizza_id)
-        if pizza_toppings:
-            topping_ids = [topping['topping_id'] for topping in pizza_toppings]
-            topping_records = ddb_toppings.batch_get_item(topping_ids)
-            return jsonify({'pizza_id': pizza_id, 'toppings': pizza_toppings, 'topping_records': topping_records}), 200
-        else:
-            return jsonify({'error': 'Pizza not found'}), 404
-    except Exception as e:
-        return str(e), 500
-
-
 def handler(event, context):
     return awsgi.response(app, event, context)

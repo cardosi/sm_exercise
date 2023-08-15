@@ -23,6 +23,16 @@ From the root directory run:
 From the root directory run:
 `flask --app api/app run`
 
+# Tests
+
+## Run Frontend Tests
+Change directory to the client directory and run:
+`npx vitest`
+
+## Run Backend Tests
+Change directory to the api directory and run:
+`pytest`
+
 # Local DynamoDB Management Script
 
 This script, `local_db.py`, is a utility for managing a local instance of DynamoDB. It provides functionality for creating, deleting, truncating, and seeding tables.
@@ -68,3 +78,7 @@ python3 local_db.py new
 ## Run Frontend Tests
 Change directory to the client directory and run:
 `npx vitest`
+
+## Run Backend Tests
+Change directory to the api directory and run:
+`pytest`

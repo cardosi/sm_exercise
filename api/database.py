@@ -60,44 +60,6 @@ class DynamoDBClient:
             logger.error(str(e))
             logger.error(traceback.format_exc())
 
-    def batch_get_item(self, keys: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        try:
-            response = self.table.batch_get_item(
-                RequestItems={
-                    self.table.name: {
-                        'Keys': keys
-                    }
-                }
-            )
-            items = []
-            for _, table_items in response['Responses'].items():
-                items.extend(table_items)
-            return items
-        except (BotoCoreError, ClientError) as e:
-            logger.error("Error in batch get item:")
-            logger.error(str(e))
-            logger.error(traceback.format_exc())
-        except Exception as e:
-            logger.error("Unexpected error during batch get item:")
-            logger.error(str(e))
-            logger.error(traceback.format_exc())
-
-    def query_table(self, key: str, value: Any) -> List[Dict[str, Any]]:
-        try:
-            response = self.table.scan(
-                FilterExpression=Attr(key).eq(value)
-            )
-            items = response.get('Items', [])
-            return items
-        except (BotoCoreError, ClientError) as e:
-            logger.error("Error querying table:")
-            logger.error(str(e))
-            logger.error(traceback.format_exc())
-        except Exception as e:
-            logger.error("Unexpected error during querying table:")
-            logger.error(str(e))
-            logger.error(traceback.format_exc())
-
     def create_item(self, item: Dict[str, Any]):
         try:
             self.table.put_item(Item=item)
